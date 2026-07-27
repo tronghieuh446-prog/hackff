@@ -1,0 +1,25 @@
+name: Build IPA
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build iOS app
+        run: |
+          cd FFHackMenu
+          xcodebuild -project FFHackMenu.xcodeproj -scheme FFHackMenu -configuration Release -sdk iphoneos CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
+      - name: Create IPA
+        run: |
+          mkdir -p Payload
+          cp -r FFHackMenu/build/Release-iphoneos/FFHackMenu.app Payload/
+          zip -r FFHackMenu.ipa Payload
+      - name: Upload IPA
+        uses: actions/upload-artifact@v3
+        with:
+          name: FFHackMenu
+          path: FFHackMenu.ipa
