@@ -11,6 +11,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Create Xcode project structure
+        run: |
+          mkdir -p FFHackMenu/FFHackMenu
+          mkdir -p FFHackMenu/FFHackMenu/Assets.xcassets/AppIcon.appiconset
+          
+          # Copy files từ thư mục hiện tại vào đúng vị trí
+          # (Giả sử các file đang ở thư mục gốc)
+          cp *.swift FFHackMenu/FFHackMenu/ 2>/dev/null || echo "No swift files"
+          cp *.storyboard FFHackMenu/FFHackMenu/ 2>/dev/null || echo "No storyboard files"
+          cp *.plist FFHackMenu/FFHackMenu/ 2>/dev/null || echo "No plist files"
+          cp -r Assets.xcassets/* FFHackMenu/FFHackMenu/Assets.xcassets/ 2>/dev/null || echo "No assets"
+          
+          # Tạo project.pbxproj
+          cat > FFHackMenu/FFHackMenu.xcodeproj/project.pbxproj << 'EOF'
+          // project.pbxproj nội dung đã gửi ở trên
+          EOF
+
       - name: Build iOS app
         run: |
           cd FFHackMenu
